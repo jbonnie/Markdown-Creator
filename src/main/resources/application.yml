@@ -3,12 +3,9 @@ spring:
     name: markdown-creator
 
   ai:
-    azure:
-      openai:
-        openai-api-key: ${AZURE_OPENAI_API_KEY}
-        chat:
-          options:
-            deployment-name: gpt
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
 
 # prompt
 prompt:

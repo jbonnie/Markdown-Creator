@@ -1,16 +1,17 @@
 package rag.markdown_creator.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.azure.openai.AzureOpenAiChatOptions;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.google.genai.GoogleGenAiChatModel;
+import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
+import org.springframework.ai.google.genai.common.GoogleGenAiThinkingLevel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import rag.markdown_creator.application.port.in.GeneratePromptUseCase;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -23,7 +24,7 @@ public class GeneratePromptService implements GeneratePromptUseCase {
     @Override
     public Prompt execute(String documentContent) {
         String userMessage = "변환하고자하는 문서의 내용은 아래와 같습니다.\n\n" + documentContent;
-        List<Message> messages = Arrays.asList(
+        List<Message> messages = List.of(
                 new SystemMessage(systemMessage),
                 new UserMessage(userMessage)
         );
@@ -33,9 +34,11 @@ public class GeneratePromptService implements GeneratePromptUseCase {
                 .build();
     }
 
-    private AzureOpenAiChatOptions getOptions() {
-        return AzureOpenAiChatOptions.builder()
-                .deploymentName("gpt-4.0")
+    private GoogleGenAiChatOptions getOptions() {
+        return GoogleGenAiChatOptions.builder()
+                .model(GoogleGenAiChatModel.ChatModel.GEMINI_2_5_PRO)
+                .thinkingLevel(GoogleGenAiThinkingLevel.LOW)
+                .responseMimeType("text/plain")
                 .temperature(0.5)
                 .build();
     }
