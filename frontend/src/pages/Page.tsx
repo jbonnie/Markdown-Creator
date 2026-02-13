@@ -27,7 +27,8 @@ function Page() {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">문서 변환기</h1>
+      <h1 className="page-title">Markdown Creator</h1>
+      <p className="page-subtitle">Transform your documents into markdown format</p>
 
       <FileUpload onFilesSelect={handleFilesSelect} />
 

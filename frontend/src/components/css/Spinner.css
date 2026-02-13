@@ -3,16 +3,20 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 40px;
+  gap: 20px;
+  padding: 60px;
+  position: relative;
+  z-index: 1;
 }
 
 .spinner {
   border-radius: 50%;
   border-style: solid;
-  border-color: #e0e0e0;
-  border-top-color: #3b82f6;
+  border-color: rgba(148, 163, 184, 0.2);
+  border-top-color: #667eea;
+  border-right-color: #764ba2;
   animation: spin 1s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.3));
 }
 
 .spinner-small {
@@ -30,14 +34,15 @@
 .spinner-large {
   width: 72px;
   height: 72px;
-  border-width: 6px;
+  border-width: 5px;
 }
 
 .spinner-message {
   margin: 0;
-  color: #666;
-  font-size: 14px;
+  color: #e2e8f0;
+  font-size: 16px;
   font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 @keyframes spin {
