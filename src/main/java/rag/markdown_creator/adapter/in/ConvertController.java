@@ -3,7 +3,7 @@ package rag.markdown_creator.adapter.in;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import rag.markdown_creator.adapter.in.dto.MdDocumentResponseDto;
@@ -20,7 +20,7 @@ public class ConvertController {
     private final ConvertDocumentUseCase convertDocumentUseCase;
 
     // 문서 변환
-    @GetMapping("/api/v1/convert")
+    @PostMapping("/api/v1/convert")
     public ResponseEntity<List<MdDocumentResponseDto>> convert(List<MultipartFile> files) {
         List<MdDocument> results = files.stream().map(convertDocumentUseCase::execute).toList();
         List<MdDocumentResponseDto> responseDtos = results.stream()

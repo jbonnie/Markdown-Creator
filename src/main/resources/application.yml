@@ -6,6 +6,9 @@ spring:
     google:
       genai:
         api-key: ${GEMINI_API_KEY}
+        chat:
+          options:
+            model: gemini-3-flash-preview
 
 # prompt
 prompt:

@@ -18,8 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GeneratePromptService implements GeneratePromptUseCase {
 
-    @Value("prompt.system-message")
-    private final String systemMessage;
+    @Value("${prompt.system-message}")
+    private String systemMessage;
 
     @Override
     public Prompt execute(String documentContent) {
@@ -36,7 +36,6 @@ public class GeneratePromptService implements GeneratePromptUseCase {
 
     private GoogleGenAiChatOptions getOptions() {
         return GoogleGenAiChatOptions.builder()
-                .model(GoogleGenAiChatModel.ChatModel.GEMINI_2_5_PRO)
                 .thinkingLevel(GoogleGenAiThinkingLevel.LOW)
                 .responseMimeType("text/plain")
                 .temperature(0.5)
