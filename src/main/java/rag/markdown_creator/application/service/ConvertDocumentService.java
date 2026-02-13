@@ -7,7 +7,7 @@ import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import rag.markdown_creator.application.port.in.*;
-import rag.markdown_creator.application.vo.MdDocument;
+import rag.markdown_creator.application.vo.MarkdownDocument;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ConvertDocumentService implements ConvertDocumentUseCase {
     private final ChatUseCase chatUseCase;
 
     @Override
-    public MdDocument execute(MultipartFile file) {
+    public MarkdownDocument execute(MultipartFile file) {
         String fileName = file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank()
                 ? file.getOriginalFilename() : "document.md";
 
@@ -45,7 +45,7 @@ public class ConvertDocumentService implements ConvertDocumentUseCase {
                 });
         log.info("--------------------- 문서 변환 종료 ---------------------");
 
-        return MdDocument.builder()
+        return MarkdownDocument.builder()
                 .fileName(fileName)
                 .content(markdown.toString())
                 .fileSize(markdown.toString().getBytes(StandardCharsets.UTF_8).length)

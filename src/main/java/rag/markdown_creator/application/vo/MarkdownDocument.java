@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MdDocument {
+public class MarkdownDocument {
     private String fileName;
     private int fileSize;
     private String content;

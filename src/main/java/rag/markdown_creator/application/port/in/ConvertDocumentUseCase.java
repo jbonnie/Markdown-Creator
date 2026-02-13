@@ -1,8 +1,8 @@
 package rag.markdown_creator.application.port.in;
 
 import org.springframework.web.multipart.MultipartFile;
-import rag.markdown_creator.application.vo.MdDocument;
+import rag.markdown_creator.application.vo.MarkdownDocument;
 
 public interface ConvertDocumentUseCase {
-    MdDocument execute(MultipartFile file);
+    MarkdownDocument execute(MultipartFile file);
 }
