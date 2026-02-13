@@ -5,7 +5,6 @@ import org.springframework.ai.azure.openai.AzureOpenAiChatOptions;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,8 @@ public class GeneratePromptService implements GeneratePromptUseCase {
     private final String systemMessage;
 
     @Override
-    public Prompt execute(String userMessage) {
+    public Prompt execute(String documentContent) {
+        String userMessage = "변환하고자하는 문서의 내용은 아래와 같습니다.\n\n" + documentContent;
         List<Message> messages = Arrays.asList(
                 new SystemMessage(systemMessage),
                 new UserMessage(userMessage)
