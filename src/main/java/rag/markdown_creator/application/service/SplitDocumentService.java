@@ -14,7 +14,7 @@ public class SplitDocumentService implements SplitDocumentUseCase {
 
     @Override
     public List<Document> execute(List<Document> documents) {
-        log.info("문서 청킹 진행");
+        log.info("--------------------- 문서 청킹 진행 ---------------------");
         TokenTextSplitter splitter = new TokenTextSplitter(1000, 100, 5, 10000, true);
         return splitter.apply(documents);
     }

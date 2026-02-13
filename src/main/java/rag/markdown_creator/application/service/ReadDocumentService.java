@@ -17,7 +17,7 @@ public class ReadDocumentService implements ReadDocumentUseCase {
 
     @Override
     public List<Document> execute(MultipartFile file) {
-        log.info("문서 읽기 진행: {}", file.getOriginalFilename());
+        log.info("--------------------- 문서 읽기 진행: {} ---------------------", file.getOriginalFilename());
         String extension = getExtension(file);
         if(extension != null && extension.contains("pdf")) {
             return readPdf(file);

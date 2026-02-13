@@ -11,6 +11,7 @@ import rag.markdown_creator.application.vo.MdDocument;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +34,16 @@ public class ConvertDocumentService implements ConvertDocumentUseCase {
         List<Document> splitResult = splitDocumentUseCase.execute(readResult);
         // 3. 문서 변환
         StringBuilder markdown = new StringBuilder();
-        splitResult.forEach(document -> {
-            Prompt prompt = generatePromptUseCase.execute(document.getText());
-            String convertResult = chatUseCase.chat(prompt);
-            markdown.append(convertResult);
-        });
+        log.info("--------------------- 문서 변환 시작 ---------------------");
+        IntStream.range(0, splitResult.size())
+                .forEach(i -> {
+                    Document document = splitResult.get(i);
+                    Prompt prompt = generatePromptUseCase.execute(document.getText());
+                    String convertResult = chatUseCase.chat(prompt);
+                    markdown.append(convertResult);
+                    log.info("# {}/{}개 Chunk 변환 완료", i + 1, splitResult.size());
+                });
+        log.info("--------------------- 문서 변환 종료 ---------------------");
 
         return MdDocument.builder()
                 .fileName(fileName)
