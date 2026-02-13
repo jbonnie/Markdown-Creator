@@ -1,4 +1,4 @@
-import './Spinner.css'
+import './css/Spinner.css'
 
 interface SpinnerProps {
   size?: 'small' | 'medium' | 'large'

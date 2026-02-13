@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import FileUpload from '../components/FileUpload'
 import Spinner from '../components/Spinner'
-import './Page.css'
+import './css/Page.css'
 
 function Page() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
