@@ -25,8 +25,7 @@ export const useDownloadDocuments = (): UseDownloadDocumentsReturn => {
     try {
       const response = await downloadDocuments(documents)
 
-      console.log('다운로드 응답:', response) // 디버깅용
-      console.log('Blob 타입 확인:', response.blob instanceof Blob) // 디버깅용
+      console.log('다운로드 응답:', response)
 
       // Blob을 다운로드
       const url = URL.createObjectURL(response.blob)

@@ -13,6 +13,8 @@ import rag.markdown_creator.application.port.in.DownloadDocumentUseCase;
 import rag.markdown_creator.application.vo.DownloadFile;
 import rag.markdown_creator.application.vo.MarkdownDocument;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RestController
@@ -32,11 +34,14 @@ public class DownloadController {
             return ResponseEntity.ok().build();
         }
 
+        String encodedFileName = URLEncoder.encode(result.getFileName(), StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20");
+
         return ResponseEntity.ok()
                 .contentType(result.getContentType())
                 .contentLength(result.getContent().length)
                 .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + result.getFileName() + "\"")
+                        "attachment; filename*=UTF-8''" + encodedFileName)
                 .body(new ByteArrayResource(result.getContent()));
     }
 }

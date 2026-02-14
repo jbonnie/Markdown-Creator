@@ -63,7 +63,7 @@ public class DownloadDocumentService implements DownloadDocumentUseCase {
     }
 
     private String validated(String target, String alternative) {
-        if(target != null && target.isEmpty()) {
+        if(target != null && !target.isEmpty()) {
             return target;
         }
         return alternative;
