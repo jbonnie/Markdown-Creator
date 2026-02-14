@@ -6,13 +6,15 @@ interface DownloadResponse {
   fileName: string | null
 }
 
+const API_BASE_URL = import.meta.env.API_BASE_URL || 'http://localhost:8080'
+
 export const downloadDocuments = async (documents: ConvertDocumentsResponse): Promise<DownloadResponse> => {
   const requestBody = documents.map(doc => ({
     fileName: doc.fileName,
     content: doc.content
   }))
 
-  const response = await axios.post('http://localhost:8080/api/v1/download', requestBody, {
+  const response = await axios.post(`${API_BASE_URL}/api/v1/download`, requestBody, {
     responseType: 'blob',
     headers: {
       'Content-Type': 'application/json',

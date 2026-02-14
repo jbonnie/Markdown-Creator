@@ -1,6 +1,8 @@
 import axios from 'axios'
 import type { ConvertDocumentsResponse } from '../types/document'
 
+const API_BASE_URL = import.meta.env.API_BASE_URL || 'http://localhost:8080'
+
 export const convertDocuments = async (files: File[]): Promise<ConvertDocumentsResponse> => {
   const formData = new FormData()
 
@@ -9,7 +11,7 @@ export const convertDocuments = async (files: File[]): Promise<ConvertDocumentsR
   })
 
   const response = await axios.post<ConvertDocumentsResponse>(
-    'http://localhost:8080/api/v1/convert',
+    `${API_BASE_URL}/api/v1/convert`,
     formData,
     {
       headers: {
