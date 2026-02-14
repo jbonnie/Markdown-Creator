@@ -1,5 +1,6 @@
 package rag.markdown_creator.application.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import rag.markdown_creator.adapter.in.dto.DownloadDocumentRequestDto;
@@ -17,6 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
+@Slf4j
 public class DownloadDocumentService implements DownloadDocumentUseCase {
 
     @Override
@@ -24,6 +26,8 @@ public class DownloadDocumentService implements DownloadDocumentUseCase {
         if(documents.isEmpty()) {
             return null;
         }
+
+        log.info("문서 다운로드 요청: {}개", documents.size());
 
         // 단일 파일
         if(documents.size() < 2) {
