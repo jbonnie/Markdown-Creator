@@ -17,16 +17,23 @@ function MarkdownCreator() {
     setCurrentPage(0) // 새 파일 선택 시 페이지 초기화
   }
 
+  // 문서 변환
   const handleConvert = async () => {
     await convert()
     setCurrentPage(0) // 변환 후 첫 페이지로
   }
 
+  // 새 문서 변환
   const handleConvertNewFile = () => {
     setSelectedFiles([])
     reset()
     fileUploadRef.current?.reset()
     setCurrentPage(0)
+  }
+
+  // 결과 다운로드
+  const handleDownload = () => {
+    alert('here');
   }
 
   const handlePrevPage = () => {
@@ -196,11 +203,22 @@ function MarkdownCreator() {
             </button>
           </div>
 
-          <div className="button-container">
+          <div className="button-container" style={{
+            display: 'flex',
+            gap: '16px',
+            marginTop: '20px',
+            justifyContent: 'center'
+          }}>
+            <button
+              className="convert-button"
+              onClick={handleDownload}
+            >
+              결과 다운로드
+            </button>
+
             <button
               className="convert-button"
               onClick={handleConvertNewFile}
-              style={{ marginTop: '20px' }}
             >
               새 문서 변환
             </button>
