@@ -172,60 +172,27 @@ function MarkdownCreator() {
           )}
 
           {/* 페이지 인디케이터 */}
-          <div style={{
-            textAlign: 'center',
-            marginBottom: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '20px'
-          }}>
+          <div className="pagination-nav">
             <button
-              className="pagination-button"
+              className="pagination-arrow-button"
               onClick={handlePrevPage}
               disabled={currentPage === 0}
-              style={{
-                padding: '8px 16px',
-                background: currentPage === 0 ? 'rgba(148, 163, 184, 0.2)' : 'rgba(102, 126, 234, 0.2)',
-                border: '1px solid rgba(148, 163, 184, 0.3)',
-                borderRadius: '8px',
-                color: currentPage === 0 ? '#64748b' : '#e2e8f0',
-                cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
-                fontSize: '14px',
-                fontWeight: '500',
-                transition: 'all 0.2s'
-              }}
             >
-              ← 이전
+              이전
             </button>
 
-            <span style={{
-              fontSize: '16px',
-              fontWeight: '600',
-              color: '#e2e8f0'
-            }}>
-              {currentPage + 1} / {documents?.length}
-            </span>
+            <div className="pagination-counter">
+              <span className="pagination-counter-text">
+                {currentPage + 1} / {documents?.length}
+              </span>
+            </div>
 
             <button
-              className="pagination-button"
+              className="pagination-arrow-button"
               onClick={handleNextPage}
               disabled={!documents || currentPage === documents.length - 1}
-              style={{
-                padding: '8px 16px',
-                background: (!documents || currentPage === documents.length - 1)
-                  ? 'rgba(148, 163, 184, 0.2)'
-                  : 'rgba(102, 126, 234, 0.2)',
-                border: '1px solid rgba(148, 163, 184, 0.3)',
-                borderRadius: '8px',
-                color: (!documents || currentPage === documents.length - 1) ? '#64748b' : '#e2e8f0',
-                cursor: (!documents || currentPage === documents.length - 1) ? 'not-allowed' : 'pointer',
-                fontSize: '14px',
-                fontWeight: '500',
-                transition: 'all 0.2s'
-              }}
             >
-              다음 →
+              다음
             </button>
           </div>
 
