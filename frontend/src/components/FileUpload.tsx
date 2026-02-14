@@ -1,5 +1,9 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useImperativeHandle, forwardRef } from 'react'
 import './css/FileUpload.css'
+
+export interface FileUploadRef {
+  reset: () => void
+}
 
 interface FileUploadProps {
   onFilesSelect: (files: File[]) => void
@@ -7,25 +11,34 @@ interface FileUploadProps {
   maxSizeMB?: number
 }
 
-function FileUpload({
+const FileUpload = forwardRef<FileUploadRef, FileUploadProps>(({
   onFilesSelect,
   acceptedTypes = ['.ppt', '.pptx', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.hwp', '.hwpx', '.txt'],
   maxSizeMB = 10
-}: FileUploadProps) {
+}, ref) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [dragActive, setDragActive] = useState(false)
   const [error, setError] = useState<string>('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  // 부모 컴포넌트에서 호출할 수 있는 reset 함수
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setSelectedFiles([])
+      setError('')
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }))
+
   const validateFile = (file: File): boolean => {
-    // 파일 크기 검증
     const fileSizeMB = file.size / (1024 * 1024)
     if (fileSizeMB > maxSizeMB) {
       setError(`${file.name}는 ${maxSizeMB}MB를 초과합니다.`)
       return false
     }
 
-    // 파일 확장자 검증
     const extension = '.' + file.name.split('.').pop()?.toLowerCase()
     if (!acceptedTypes.includes(extension)) {
       setError(`${file.name}는 지원하지 않는 파일 형식입니다.`)
@@ -148,6 +161,8 @@ function FileUpload({
       )}
     </div>
   )
-}
+})
+
+FileUpload.displayName = 'FileUpload'
 
 export default FileUpload

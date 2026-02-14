@@ -1,11 +1,13 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import FileUpload from '../components/FileUpload'
+import type { FileUploadRef } from '../components/FileUpload'
 import Spinner from '../components/Spinner'
 import { useConvertDocuments } from '../hooks/useConvertDocuments'
 import './css/Markdown-creator.css'
 
 function MarkdownCreator() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const fileUploadRef = useRef<FileUploadRef>(null)
   const { documents, isLoading, error, convert, reset } = useConvertDocuments(selectedFiles)
 
   const handleFilesSelect = (files: File[]) => {
@@ -17,12 +19,18 @@ function MarkdownCreator() {
     await convert()
   }
 
+  const handleConvertNewFile = () => {
+    setSelectedFiles([])
+    reset()
+    fileUploadRef.current?.reset()
+  }
+
   return (
     <div className="page-container">
       <h1 className="page-title">Document Converter</h1>
       <p className="page-subtitle">Transform your documents into markdown format</p>
 
-      <FileUpload onFilesSelect={handleFilesSelect} />
+      <FileUpload ref={fileUploadRef} onFilesSelect={handleFilesSelect} />
 
       {error && (
         <div className="error-message" style={{ marginTop: '20px', maxWidth: '600px' }}>
@@ -78,10 +86,7 @@ function MarkdownCreator() {
           <div className="button-container">
             <button
               className="convert-button"
-              onClick={() => {
-                setSelectedFiles([])
-                reset()
-              }}
+              onClick={handleConvertNewFile}
               style={{ marginTop: '20px' }}
             >
               새 문서 변환
