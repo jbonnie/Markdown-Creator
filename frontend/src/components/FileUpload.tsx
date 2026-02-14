@@ -9,7 +9,7 @@ interface FileUploadProps {
 
 function FileUpload({
   onFilesSelect,
-  acceptedTypes = ['.ppt', '.pptx', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt'],
+  acceptedTypes = ['.ppt', '.pptx', '.pdf', '.doc', '.docx', '.xls', '.xlsx', '.hwp', '.hwpx', '.txt'],
   maxSizeMB = 10
 }: FileUploadProps) {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
