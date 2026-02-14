@@ -6,3 +6,11 @@ export interface MarkdownDocument {
 }
 
 export type ConvertDocumentsResponse = MarkdownDocument[]
+
+/* 문서 다운로드 */
+export interface DownloadDocument {
+  fileName: string
+  content: string
+}
+
+export type DownloadDocumentsRequest = DownloadDocument[]

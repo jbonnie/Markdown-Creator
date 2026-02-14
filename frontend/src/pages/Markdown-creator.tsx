@@ -3,13 +3,15 @@ import FileUpload from '../components/FileUpload'
 import type { FileUploadRef } from '../components/FileUpload'
 import Spinner from '../components/Spinner'
 import { useConvertDocuments } from '../hooks/useConvertDocuments'
+import { useDownloadDocuments } from '../hooks/useDownloadDocuments'
 import './css/Markdown-creator.css'
 
 function MarkdownCreator() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [currentPage, setCurrentPage] = useState(0) // 현재 페이지
   const fileUploadRef = useRef<FileUploadRef>(null)
-  const { documents, isLoading, error, convert, reset } = useConvertDocuments(selectedFiles)
+  const { documents, isLoading, convertError, convert, reset } = useConvertDocuments(selectedFiles)
+  const { isDownloading, downloadError, download } = useDownloadDocuments()
 
   const handleFilesSelect = (files: File[]) => {
     setSelectedFiles(files)
@@ -32,8 +34,9 @@ function MarkdownCreator() {
   }
 
   // 결과 다운로드
-  const handleDownload = () => {
-    alert('here');
+  const handleDownload = async () => {
+    if (!documents || documents.length === 0) return
+    await download(documents)
   }
 
   const handlePrevPage = () => {
@@ -75,9 +78,9 @@ function MarkdownCreator() {
 
       {!documents && <FileUpload ref={fileUploadRef} onFilesSelect={handleFilesSelect} />}
 
-      {error && (
+      {(convertError || downloadError) && (
         <div className="error-message" style={{ marginTop: '20px', maxWidth: '600px' }}>
-          ⚠️ {error}
+          ⚠️ {convertError ? convertError : downloadError}
         </div>
       )}
 
@@ -89,7 +92,12 @@ function MarkdownCreator() {
         </div>
       )}
 
-      {isLoading && <Spinner size="large" message="문서 변환 중..." />}
+      {(isLoading || isDownloading) && (
+        <Spinner
+          size="large"
+          message={isLoading ? "문서 변환 중..." : "다운로드 준비 중..."}
+        />
+      )}
 
       {currentDocument && (
         <div style={{ marginTop: '40px', color: '#e2e8f0', width: '100%', maxWidth: '800px' }}>
@@ -212,8 +220,9 @@ function MarkdownCreator() {
             <button
               className="convert-button"
               onClick={handleDownload}
+              disabled={isDownloading}
             >
-              결과 다운로드
+              {isDownloading ? '다운로드 중...' : '결과 다운로드'}
             </button>
 
             <button

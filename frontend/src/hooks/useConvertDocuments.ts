@@ -5,25 +5,25 @@ import { ApiException } from '../types/api'
 
 interface UseConvertDocumentsReturn {
   documents: ConvertDocumentsResponse | null
-  isLoading: boolean
-  error: string | null
+  isConverting: boolean
+  convertError: string | null
   convert: () => Promise<void>
   reset: () => void
 }
 
 export const useConvertDocuments = (files: File[]): UseConvertDocumentsReturn => {
   const [documents, setDocuments] = useState<ConvertDocumentsResponse | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [isConverting, setIsConverting] = useState(false)
+  const [convertError, setConvertError] = useState<string | null>(null)
 
   const convert = async () => {
     if (files.length === 0) {
-      setError('파일을 선택해주세요.')
+      setConvertError('파일을 선택해주세요.')
       return
     }
 
-    setIsLoading(true)
-    setError(null)
+    setIsConverting(true)
+    setConvertError(null)
 
     try {
       const result = await convertDocuments(files)
@@ -31,28 +31,28 @@ export const useConvertDocuments = (files: File[]): UseConvertDocumentsReturn =>
       console.log('변환 성공:', result)
     } catch (err) {
       if (err instanceof ApiException) {
-        setError(`변환 실패: ${err.message} (${err.status})`)
+        setConvertError(`변환 실패: ${err.message} (${err.status})`)
       } else if (err instanceof Error) {
-        setError(`변환 실패: ${err.message}`)
+        setConvertError(`변환 실패: ${err.message}`)
       } else {
-        setError('문서 변환 중 알 수 없는 오류가 발생했습니다.')
+        setConvertError('문서 변환 중 알 수 없는 오류가 발생했습니다.')
       }
       console.error('변환 에러:', err)
       setDocuments(null)
     } finally {
-      setIsLoading(false)
+      setIsConverting(false)
     }
   }
 
   const reset = () => {
     setDocuments(null)
-    setError(null)
+    setConvertError(null)
   }
 
   return {
     documents,
-    isLoading,
-    error,
+    isConverting,
+    convertError,
     convert,
     reset,
   }
