@@ -1,13 +1,11 @@
 package rag.markdown_creator.application.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.ai.azure.openai.AzureOpenAiChatOptions;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.google.genai.GoogleGenAiChatModel;
-import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
-import org.springframework.ai.google.genai.common.GoogleGenAiThinkingLevel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import rag.markdown_creator.application.port.in.GeneratePromptUseCase;
@@ -34,10 +32,8 @@ public class GeneratePromptService implements GeneratePromptUseCase {
                 .build();
     }
 
-    private GoogleGenAiChatOptions getOptions() {
-        return GoogleGenAiChatOptions.builder()
-                .thinkingLevel(GoogleGenAiThinkingLevel.LOW)
-                .responseMimeType("text/plain")
+    private AzureOpenAiChatOptions getOptions() {
+        return AzureOpenAiChatOptions.builder()
                 .temperature(0.5)
                 .build();
     }
