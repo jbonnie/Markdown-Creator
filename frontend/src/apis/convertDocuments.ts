@@ -12,5 +12,6 @@ export const convertDocuments = async (files: File[]): Promise<ConvertDocumentsR
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+    timeout: 60000 * 5, // 5분
   })
 }
