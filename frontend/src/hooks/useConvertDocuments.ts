@@ -1,22 +1,22 @@
 import { useState } from 'react'
 import { convertDocuments } from '../apis/convertDocuments'
-import { MarkdownDocument } from '../types/document'
+import type { ConvertDocumentsResponse } from '../types/document'
 import { ApiException } from '../types/api'
 
 interface UseConvertDocumentsReturn {
-  documents: MarkdownDocument[]
+  documents: ConvertDocumentsResponse | null
   isLoading: boolean
   error: string | null
-  convert: (files: File[]) => Promise<void>
+  convert: () => Promise<void>
   reset: () => void
 }
 
-export const useConvertDocuments = (): UseConvertDocumentsReturn => {
-  const [documents, setDocuments] = useState<MarkdownDocument[]>([])
+export const useConvertDocuments = (files: File[]): UseConvertDocumentsReturn => {
+  const [documents, setDocuments] = useState<ConvertDocumentsResponse | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const convert = async (files: File[]) => {
+  const convert = async () => {
     if (files.length === 0) {
       setError('파일을 선택해주세요.')
       return
@@ -38,13 +38,14 @@ export const useConvertDocuments = (): UseConvertDocumentsReturn => {
         setError('문서 변환 중 알 수 없는 오류가 발생했습니다.')
       }
       console.error('변환 에러:', err)
+      setDocuments(null)
     } finally {
       setIsLoading(false)
     }
   }
 
   const reset = () => {
-    setDocuments([])
+    setDocuments(null)
     setError(null)
   }
 
