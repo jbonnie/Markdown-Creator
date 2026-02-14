@@ -22,6 +22,7 @@ export const useDownloadDocuments = (): UseDownloadDocumentsReturn => {
     setIsDownloading(true)
     setDownloadError(null)
 
+    await new Promise(resolve => setTimeout(resolve, 3000))
     try {
       const response = await downloadDocuments(documents)
 

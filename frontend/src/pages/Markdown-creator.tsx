@@ -10,7 +10,7 @@ function MarkdownCreator() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [currentPage, setCurrentPage] = useState(0) // 현재 페이지
   const fileUploadRef = useRef<FileUploadRef>(null)
-  const { documents, isLoading, convertError, convert, reset } = useConvertDocuments(selectedFiles)
+  const { documents, isConverting, convertError, convert, reset } = useConvertDocuments(selectedFiles)
   const { isDownloading, downloadError, download } = useDownloadDocuments()
 
   const handleFilesSelect = (files: File[]) => {
@@ -53,13 +53,13 @@ function MarkdownCreator() {
 
   // 로딩 시작 시 맨 아래로 스크롤
   useEffect(() => {
-    if (isLoading) {
+    if (isConverting) {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth'
       })
     }
-  }, [isLoading])
+  }, [isConverting])
 
   // 변환 완료 시 맨 위로 스크롤
   useEffect(() => {
@@ -84,7 +84,7 @@ function MarkdownCreator() {
         </div>
       )}
 
-      {selectedFiles.length > 0 && !isLoading && !documents && (
+      {selectedFiles.length > 0 && !isConverting && !documents && (
         <div className="button-container">
           <button className="convert-button" onClick={handleConvert}>
             변환하기
@@ -92,10 +92,10 @@ function MarkdownCreator() {
         </div>
       )}
 
-      {(isLoading || isDownloading) && (
+      {isConverting && (
         <Spinner
           size="large"
-          message={isLoading ? "문서 변환 중..." : "다운로드 준비 중..."}
+          message="문서 변환 중..."
         />
       )}
 
