@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import FileUpload from '../components/FileUpload'
 import type { FileUploadRef } from '../components/FileUpload'
 import Spinner from '../components/Spinner'
@@ -40,6 +40,26 @@ function MarkdownCreator() {
   }
 
   const currentDocument = documents && documents[currentPage]
+
+  // 로딩 시작 시 맨 아래로 스크롤
+  useEffect(() => {
+    if (isLoading) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth'
+      })
+    }
+  }, [isLoading])
+
+  // 변환 완료 시 맨 위로 스크롤
+  useEffect(() => {
+    if (documents && documents.length > 0) {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+    }
+  }, [documents])
 
   return (
     <div className="page-container">
