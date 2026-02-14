@@ -25,21 +25,19 @@ export const useDownloadDocuments = (): UseDownloadDocumentsReturn => {
     try {
       const response = await downloadDocuments(documents)
 
+      console.log('다운로드 응답:', response) // 디버깅용
+      console.log('Blob 타입 확인:', response.blob instanceof Blob) // 디버깅용
+
       // Blob을 다운로드
       const url = URL.createObjectURL(response.blob)
       const link = document.createElement('a')
       link.href = url
 
-      // Content-Disposition 헤더에서 파일명 추출
-      let fileName = 'download.md'
-      if (response.fileName) {
-        fileName = response.fileName
-      } else {
-        // 헤더에서 파일명을 못 가져온 경우 폴백
-        fileName = documents.length === 1
+      // 파일명 결정 (헤더에서 가져오거나 폴백)
+      const fileName = response.fileName ||
+        (documents.length === 1
           ? `${documents[0].fileName.replace(/\.[^/.]+$/, '')}.md`
-          : `documents_${new Date().getTime()}.zip`
-      }
+          : `documents_${new Date().getTime()}.zip`)
 
       link.download = fileName
 
@@ -53,6 +51,7 @@ export const useDownloadDocuments = (): UseDownloadDocumentsReturn => {
 
       console.log('다운로드 성공:', fileName)
     } catch (err) {
+      console.error('다운로드 에러 상세:', err)
       if (err instanceof ApiException) {
         setDownloadError(`다운로드 실패: ${err.message}`)
       } else if (err instanceof Error) {
@@ -60,7 +59,6 @@ export const useDownloadDocuments = (): UseDownloadDocumentsReturn => {
       } else {
         setDownloadError('문서 다운로드 중 알 수 없는 오류가 발생했습니다.')
       }
-      console.error('다운로드 에러:', err)
     } finally {
       setIsDownloading(false)
     }
