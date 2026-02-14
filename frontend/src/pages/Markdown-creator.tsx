@@ -46,7 +46,7 @@ function MarkdownCreator() {
       <h1 className="page-title">Document Converter</h1>
       <p className="page-subtitle">Transform your documents into markdown format</p>
 
-      <FileUpload ref={fileUploadRef} onFilesSelect={handleFilesSelect} />
+      {!documents && <FileUpload ref={fileUploadRef} onFilesSelect={handleFilesSelect} />}
 
       {error && (
         <div className="error-message" style={{ marginTop: '20px', maxWidth: '600px' }}>
@@ -66,6 +66,29 @@ function MarkdownCreator() {
 
       {currentDocument && (
         <div style={{ marginTop: '40px', color: '#e2e8f0', width: '100%', maxWidth: '800px' }}>
+            {/* 변환 결과 헤더 */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  marginBottom: '24px',
+                  paddingBottom: '16px',
+                  borderBottom: '2px solid rgba(102, 126, 234, 0.3)'
+                }}>
+                  <span style={{ fontSize: '24px' }}>✨</span>
+                  <h2 style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    margin: 0,
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>
+                    변환 결과
+                  </h2>
+                </div>
+
           {/* 문서 내용 */}
           <div
             style={{
@@ -129,62 +152,62 @@ function MarkdownCreator() {
           )}
 
           {/* 페이지 인디케이터 */}
-                    <div style={{
-                      textAlign: 'center',
-                      marginBottom: '20px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '20px'
-                    }}>
-                      <button
-                        className="pagination-button"
-                        onClick={handlePrevPage}
-                        disabled={currentPage === 0}
-                        style={{
-                          padding: '8px 16px',
-                          background: currentPage === 0 ? 'rgba(148, 163, 184, 0.2)' : 'rgba(102, 126, 234, 0.2)',
-                          border: '1px solid rgba(148, 163, 184, 0.3)',
-                          borderRadius: '8px',
-                          color: currentPage === 0 ? '#64748b' : '#e2e8f0',
-                          cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '500',
-                          transition: 'all 0.2s'
-                        }}
-                      >
-                        ← 이전
-                      </button>
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '20px'
+          }}>
+            <button
+              className="pagination-button"
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+              style={{
+                padding: '8px 16px',
+                background: currentPage === 0 ? 'rgba(148, 163, 184, 0.2)' : 'rgba(102, 126, 234, 0.2)',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                borderRadius: '8px',
+                color: currentPage === 0 ? '#64748b' : '#e2e8f0',
+                cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s'
+              }}
+            >
+              ← 이전
+            </button>
 
-                      <span style={{
-                        fontSize: '16px',
-                        fontWeight: '600',
-                        color: '#e2e8f0'
-                      }}>
-                        {currentPage + 1} / {documents?.length}
-                      </span>
+            <span style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#e2e8f0'
+            }}>
+              {currentPage + 1} / {documents?.length}
+            </span>
 
-                      <button
-                        className="pagination-button"
-                        onClick={handleNextPage}
-                        disabled={!documents || currentPage === documents.length - 1}
-                        style={{
-                          padding: '8px 16px',
-                          background: (!documents || currentPage === documents.length - 1)
-                            ? 'rgba(148, 163, 184, 0.2)'
-                            : 'rgba(102, 126, 234, 0.2)',
-                          border: '1px solid rgba(148, 163, 184, 0.3)',
-                          borderRadius: '8px',
-                          color: (!documents || currentPage === documents.length - 1) ? '#64748b' : '#e2e8f0',
-                          cursor: (!documents || currentPage === documents.length - 1) ? 'not-allowed' : 'pointer',
-                          fontSize: '14px',
-                          fontWeight: '500',
-                          transition: 'all 0.2s'
-                        }}
-                      >
-                        다음 →
-                      </button>
-                    </div>
+            <button
+              className="pagination-button"
+              onClick={handleNextPage}
+              disabled={!documents || currentPage === documents.length - 1}
+              style={{
+                padding: '8px 16px',
+                background: (!documents || currentPage === documents.length - 1)
+                  ? 'rgba(148, 163, 184, 0.2)'
+                  : 'rgba(102, 126, 234, 0.2)',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                borderRadius: '8px',
+                color: (!documents || currentPage === documents.length - 1) ? '#64748b' : '#e2e8f0',
+                cursor: (!documents || currentPage === documents.length - 1) ? 'not-allowed' : 'pointer',
+                fontSize: '14px',
+                fontWeight: '500',
+                transition: 'all 0.2s'
+              }}
+            >
+              다음 →
+            </button>
+          </div>
 
           <div className="button-container">
             <button
