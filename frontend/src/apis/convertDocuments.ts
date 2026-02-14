@@ -1,4 +1,4 @@
-import { apiClient } from './api'
+import axios from 'axios'
 import type { ConvertDocumentsResponse } from '../types/document'
 
 export const convertDocuments = async (files: File[]): Promise<ConvertDocumentsResponse> => {
@@ -8,10 +8,16 @@ export const convertDocuments = async (files: File[]): Promise<ConvertDocumentsR
     formData.append('files', file)
   })
 
-  return await apiClient.post<ConvertDocumentsResponse>('/convert', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    timeout: 60000 * 5, // 5분
-  })
+  const response = await axios.post<ConvertDocumentsResponse>(
+    'http://localhost:8080/api/v1/convert',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 60000 * 5, // 5분
+    }
+  )
+
+  return response.data
 }
