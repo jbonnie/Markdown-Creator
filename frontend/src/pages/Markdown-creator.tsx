@@ -7,23 +7,39 @@ import './css/Markdown-creator.css'
 
 function MarkdownCreator() {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [currentPage, setCurrentPage] = useState(0) // 현재 페이지
   const fileUploadRef = useRef<FileUploadRef>(null)
   const { documents, isLoading, error, convert, reset } = useConvertDocuments(selectedFiles)
 
   const handleFilesSelect = (files: File[]) => {
     setSelectedFiles(files)
-    reset() // 새 파일 선택 시 이전 결과 초기화
+    reset()
+    setCurrentPage(0) // 새 파일 선택 시 페이지 초기화
   }
 
   const handleConvert = async () => {
     await convert()
+    setCurrentPage(0) // 변환 후 첫 페이지로
   }
 
   const handleConvertNewFile = () => {
     setSelectedFiles([])
     reset()
     fileUploadRef.current?.reset()
+    setCurrentPage(0)
   }
+
+  const handlePrevPage = () => {
+    setCurrentPage(prev => Math.max(0, prev - 1))
+  }
+
+  const handleNextPage = () => {
+    if (documents) {
+      setCurrentPage(prev => Math.min(documents.length - 1, prev + 1))
+    }
+  }
+
+  const currentDocument = documents && documents[currentPage]
 
   return (
     <div className="page-container">
@@ -48,40 +64,127 @@ function MarkdownCreator() {
 
       {isLoading && <Spinner size="large" message="문서 변환 중..." />}
 
-      {documents && documents.length > 0 && (
+      {currentDocument && (
         <div style={{ marginTop: '40px', color: '#e2e8f0', width: '100%', maxWidth: '800px' }}>
-          <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>
-            변환 완료! ({documents.length}개 문서)
-          </h2>
-          {documents.map((doc, index) => (
-            <div
-              key={index}
-              style={{
-                marginBottom: '30px',
-                background: 'rgba(30, 41, 59, 0.5)',
-                padding: '20px',
-                borderRadius: '12px',
-                border: '1px solid rgba(148, 163, 184, 0.1)'
-              }}
-            >
-              <h3 style={{ marginBottom: '10px', color: '#e2e8f0' }}>{doc.fileName}</h3>
-              <p style={{ marginBottom: '15px', color: '#94a3b8', fontSize: '14px' }}>
-                크기: {(doc.fileSize / 1024).toFixed(2)} KB
-              </p>
-              <pre style={{
-                background: 'rgba(15, 23, 42, 0.5)',
-                padding: '20px',
-                borderRadius: '8px',
-                overflow: 'auto',
-                maxHeight: '400px',
-                color: '#e2e8f0',
-                fontSize: '14px',
-                lineHeight: '1.6'
-              }}>
-                {doc.content}
-              </pre>
+          {/* 문서 내용 */}
+          <div
+            style={{
+              marginBottom: '30px',
+              background: 'rgba(30, 41, 59, 0.5)',
+              padding: '20px',
+              borderRadius: '12px',
+              border: '1px solid rgba(148, 163, 184, 0.1)'
+            }}
+          >
+            <h3 style={{ marginBottom: '10px', color: '#e2e8f0' }}>
+              {currentDocument.fileName}
+            </h3>
+            <p style={{ marginBottom: '15px', color: '#94a3b8', fontSize: '14px' }}>
+              크기: {(currentDocument.fileSize / 1024).toFixed(2)} KB
+            </p>
+            <pre style={{
+              background: 'rgba(15, 23, 42, 0.5)',
+              padding: '20px',
+              borderRadius: '8px',
+              overflow: 'auto',
+              maxHeight: '500px',
+              color: '#e2e8f0',
+              fontSize: '14px',
+              lineHeight: '1.6',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word'
+            }}>
+              {currentDocument.content}
+            </pre>
+          </div>
+
+          {/* 페이지 점 인디케이터 (선택사항) */}
+          {documents && documents.length > 1 && (
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '8px',
+              marginBottom: '20px'
+            }}>
+              {documents.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index)}
+                  style={{
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    border: 'none',
+                    background: index === currentPage
+                      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                      : 'rgba(148, 163, 184, 0.3)',
+                    cursor: 'pointer',
+                    padding: 0,
+                    transition: 'all 0.3s'
+                  }}
+                  aria-label={`${index + 1}페이지로 이동`}
+                />
+              ))}
             </div>
-          ))}
+          )}
+
+          {/* 페이지 인디케이터 */}
+                    <div style={{
+                      textAlign: 'center',
+                      marginBottom: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '20px'
+                    }}>
+                      <button
+                        className="pagination-button"
+                        onClick={handlePrevPage}
+                        disabled={currentPage === 0}
+                        style={{
+                          padding: '8px 16px',
+                          background: currentPage === 0 ? 'rgba(148, 163, 184, 0.2)' : 'rgba(102, 126, 234, 0.2)',
+                          border: '1px solid rgba(148, 163, 184, 0.3)',
+                          borderRadius: '8px',
+                          color: currentPage === 0 ? '#64748b' : '#e2e8f0',
+                          cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        ← 이전
+                      </button>
+
+                      <span style={{
+                        fontSize: '16px',
+                        fontWeight: '600',
+                        color: '#e2e8f0'
+                      }}>
+                        {currentPage + 1} / {documents?.length}
+                      </span>
+
+                      <button
+                        className="pagination-button"
+                        onClick={handleNextPage}
+                        disabled={!documents || currentPage === documents.length - 1}
+                        style={{
+                          padding: '8px 16px',
+                          background: (!documents || currentPage === documents.length - 1)
+                            ? 'rgba(148, 163, 184, 0.2)'
+                            : 'rgba(102, 126, 234, 0.2)',
+                          border: '1px solid rgba(148, 163, 184, 0.3)',
+                          borderRadius: '8px',
+                          color: (!documents || currentPage === documents.length - 1) ? '#64748b' : '#e2e8f0',
+                          cursor: (!documents || currentPage === documents.length - 1) ? 'not-allowed' : 'pointer',
+                          fontSize: '14px',
+                          fontWeight: '500',
+                          transition: 'all 0.2s'
+                        }}
+                      >
+                        다음 →
+                      </button>
+                    </div>
 
           <div className="button-container">
             <button
